@@ -1,0 +1,99 @@
+CREATE TABLE [dbo].[Employee](  
+    [EmployeeId] [int] IDENTITY(1,1) NOT NULL,  
+    [Name] [varchar](20) NOT NULL,  
+    [City] [varchar](20) NOT NULL,  
+    [Department] [varchar](20) NOT NULL,  
+    [Gender] [varchar](6) NOT NULL  
+) 
+
+
+
+CREATE PROCEDURE spEmployee  
+(  
+    @EmployeeId INT = NULL,  
+    @Name VARCHAR(20) = NULL,  
+    @City VARCHAR(20) = NULL,  
+    @Department VARCHAR(20) = NULL,  
+    @Gender VARCHAR(6) = NULL,  
+    @ActionType VARCHAR(25)  
+)  
+AS  
+BEGIN  
+    IF @ActionType = 'SaveData'  
+    BEGIN  
+        IF NOT EXISTS (SELECT * FROM Employee WHERE EmployeeId=@EmployeeId)  
+        BEGIN  
+            INSERT INTO Employee (Name,City,Department,Gender)  
+            VALUES (@Name,@City,@Department,@Gender)  
+        END  
+        ELSE  
+        BEGIN  
+            UPDATE Employee SET Name=@Name,City=@City,Department=@Department,  
+            Gender=@Gender WHERE EmployeeId=@EmployeeId  
+        END  
+    END  
+    IF @ActionType = 'DeleteData'  
+    BEGIN  
+        DELETE tblEmployee WHERE EmployeeId=@EmployeeId  
+    END  
+    IF @ActionType = 'FetchData'  
+    BEGIN  
+        SELECT EmployeeId AS EmpId,Name,City,Department,Gender FROM Employee  
+    END  
+    IF @ActionType = 'FetchRecord'  
+    BEGIN  
+        SELECT EmployeeId AS EmpId,Name,City,Department,Gender FROM Employee   
+        WHERE EmployeeId=@EmployeeId  
+    END  
+END
+
+
+
+
+
+//Department Crud//
+
+CREATE TABLE [dbo].[Department](  
+    [DepartmentId] [int] IDENTITY(1,1) NOT NULL,  
+    [DepartmentName] [varchar](20) NOT NULL,  
+     [LocationId] [int]  NOT NULL 
+) 
+
+
+
+CREATE PROCEDURE spDepartment 
+(  
+    @DepartmentId INT = NULL,  
+    @DepartmentName VARCHAR(20) = NULL,  
+    @LocationId INT =NULL,
+@ActionType VARCHAR(25)  
+)  
+AS  
+BEGIN  
+    IF @ActionType = 'SaveData'  
+    BEGIN  
+        IF NOT EXISTS (SELECT * FROM Department WHERE DepartmentId=@DepartmentId)  
+        BEGIN  
+            INSERT INTO Department (DepartmentId,DepartmentName,LocationId)  
+            VALUES (@DepartmentId,@DepartmentName,@LocationId)  
+        END  
+        ELSE  
+        BEGIN  
+            UPDATE Employee SET DepartmentName=@DepartmentName,LocationId=@LocationId
+            WHERE DepartmentId=@DepartmentId
+        END  
+    END  
+    IF @ActionType = 'DeleteData'  
+    BEGIN  
+        DELETE Department WHERE DepartmentId=@DepartmentId 
+    END  
+    IF @ActionType = 'FetchData'  
+    BEGIN  
+        SELECT DepartmentId AS DeptId,DeptName,locId FROM Department 
+    END  
+    IF @ActionType = 'FetchRecord'  
+    BEGIN  
+        SELECT DepartmentId AS DeptId,DeptName,locId FROM Department 
+       WHERE DepartmentId=@DepartmentId
+    END  
+END
